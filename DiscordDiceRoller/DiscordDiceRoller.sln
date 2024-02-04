@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32804.467
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscordDiceRoller", "DiscordDiceRoller.csproj", "{76A722EB-6BED-4E0E-B521-9EE408B7B0E9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscordDiceRoller-Tests", "..\DiscordDiceRoller-Tests\DiscordDiceRoller-Tests.csproj", "{1BAEC00C-1081-46F4-9E61-9D13E0AA0732}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{76A722EB-6BED-4E0E-B521-9EE408B7B0E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76A722EB-6BED-4E0E-B521-9EE408B7B0E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76A722EB-6BED-4E0E-B521-9EE408B7B0E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76A722EB-6BED-4E0E-B521-9EE408B7B0E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1BAEC00C-1081-46F4-9E61-9D13E0AA0732}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1BAEC00C-1081-46F4-9E61-9D13E0AA0732}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1BAEC00C-1081-46F4-9E61-9D13E0AA0732}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1BAEC00C-1081-46F4-9E61-9D13E0AA0732}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3A1CED82-9963-4F81-92DB-711634F496CC}
+	EndGlobalSection
+EndGlobal
