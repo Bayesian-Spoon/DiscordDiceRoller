@@ -1,45 +1,54 @@
-﻿namespace DiscordDiceRoller
+﻿using DiscordDiceRoller.Discord;
+
+namespace DiscordDiceRoller
 {
     internal class Program
     {
         static void Main(string[] args)
         {
-            //Introduction
-            Console.WriteLine("Welcome to the Discord Dice Roller");
-            Console.WriteLine("Type /roll to roll 1d6");
-            Console.WriteLine("Type /help for instructions");
-            Console.WriteLine("Type /exit to end this session");
-
-            //Main loop
-            string input = Console.ReadLine();
-            while (input != "/exit")
+            if (args.Length == 0)
             {
-                //Roll dice
-                if (input == "/roll")
+                //Try to get secrets and connect to Discord
+                try
                 {
-                    Console.WriteLine(string.Format("Rolled 1d6 and got a {0}", DiceRoller.Roll(6)));
+                    Secrets secrets = SecretsManager.Get();
+                    new DiscordClient(secrets).Run();
+                    return;
+                }
+                catch
+                {
+                    //Fall over to next section
                 }
 
-                //Show help
-                else if (input == "/help")
+                //If that fails, fall back to local
+                new CommandLineClient().Run();
+                return;
+            }
+            else
+            {
+                /*
+                if (args[0].ToLower() == "discord")
                 {
-                    Console.WriteLine("Type /roll to roll 1d6");
-                    Console.WriteLine("Type /help for instructions");
-                    Console.WriteLine("Type /exit to end this session");
+                    Secrets secrets = new Secrets();
+                    new DiscordClient(secrets).Run();
                 }
-
-                //Invalid Input
+                else if (args[0].ToLower() == "local")
+                {
+                    new CommandLineClient().Run();
+                }
                 else
                 {
-                    Console.WriteLine(String.Format("Unknown command: {0}", input));
+                    Console.WriteLine($"Unknown mode: {args[0]}");
+                    Console.WriteLine("Use 'discord' for DiscordClient mode, or 'local' for local console usage");
+                    Console.WriteLine("If no arguments are provided, the client will try Discord first, then local");
+                    Console.WriteLine();
+
+                    Console.WriteLine("Press ENTER to exit");
+
+                    Console.ReadLine();
                 }
-
-                //Get next instruction
-                input = Console.ReadLine();
+                */
             }
-
-            //Goodbye
-            Console.WriteLine("Goodbye!");
         }        
     }
 }
