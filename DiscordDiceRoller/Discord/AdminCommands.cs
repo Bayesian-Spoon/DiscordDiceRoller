@@ -1,9 +1,4 @@
 ﻿using Discord;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DiscordDiceRoller
 {
@@ -18,9 +13,10 @@ namespace DiscordDiceRoller
 
         public void ParseInput(string input)
         {
-            if (input[0] == '!')
+            //Check if this is an Admin slash command
+            if (input[0] == '/')
             {       
-                if (input == "!quit" || input == "!exit")
+                if (input == "/quit" || input == "/exit")
                 {
                     Quit();
                     return;
@@ -34,6 +30,7 @@ namespace DiscordDiceRoller
             }
             else
             {
+                //If not a command, simply send the message as-is
                 SendMessage(input);
             }
         }
