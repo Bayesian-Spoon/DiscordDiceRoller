@@ -45,15 +45,10 @@ namespace DiscordDiceRoller.Discord
             }
 
             //Roll
-            int result = 0;
-            for (int die = 0; die < dice; die++)
-            {
-                result += DiceRoller.Roll(sides);
-            }
-
-            var name = command.User.GlobalName;
+            int result = DiceRoller.Roll(dice, sides);
 
             //Respond
+            var name = command.User.GlobalName;
             await command.RespondAsync($"{name} rolled {dice}d{sides} and got: {result}");
         }
     }
