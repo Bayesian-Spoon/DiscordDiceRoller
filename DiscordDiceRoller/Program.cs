@@ -6,14 +6,23 @@ namespace DiscordDiceRoller
     {
         static void Main(string[] args)
         {
+#if TRUE
+            //Easy debug override for console mode
+            new CommandLineClient().Run();
+            return;
+#endif
+
             if (args.Length == 0)
             {
                 //Try to get secrets and connect to Discord
                 try
                 {
                     Secrets secrets = SecretsManager.Get();
-                    new DiscordClient(secrets).Run();
-                    return;
+                    if (secrets != null)
+                    {
+                        new DiscordClient(secrets).Run();
+                        return;
+                    }
                 }
                 catch
                 {
