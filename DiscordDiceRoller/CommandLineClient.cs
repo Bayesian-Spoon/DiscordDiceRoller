@@ -15,35 +15,47 @@ namespace DiscordDiceRoller
             ShowHelp();
 
             //Main loop
-            string input = Console.ReadLine();
+            string? input = Console.ReadLine();
             while (input != "/exit")
             {
                 if (input != null)
                 {
-                    //Roll dice
-                    if (input == "/roll")
-                    {
-                        DiceRoller.RollResult result = DiceRoller.DetailedRoll(3, 6);
-                        Console.WriteLine($"Rolled {result.DiceRolled} and got {result.DetailedOutcome}");
-                    }
-                    else if (input.StartsWith("/roll"))
-                    {                        
-                        string diceInput = input.Substring(5); // this choice of index supports "/roll3d6" as well as the expected "/roll 3d6"
-                        //Console.WriteLine(diceInput);
-                        DiceRoller.RollResult result = DiceRoller.Parse(diceInput);
-                        Console.WriteLine($"Rolled {result.DiceRolled} and got {result.DetailedOutcome}");
-                    }
-
                     //Show help
-                    else if (input == "/help")
+                    if (input == "/help")
                     {
                         ShowHelp();
                     }
-
-                    //Invalid Input
                     else
                     {
-                        Console.WriteLine(String.Format("Unknown command: {0}", input));
+                        try
+                        {
+                            DiceRoller.RollResult? result;
+                            int firstSpace = input.IndexOf(' ');
+                            if (firstSpace == -1)
+                            {
+                                result = DynamicParser.Parse(input, "");
+                            }
+                            else
+                            {
+                                result = DynamicParser.Parse(input.Substring(0, firstSpace), input.Substring(firstSpace + 1));
+                            }
+
+                            if (result != null)
+                            {
+                                Console.WriteLine(result.DetailedOutcome);
+                            }
+                            else
+                            {
+                                //This should never happen
+                                Console.WriteLine("Parse succeeded, but we didn't get any results!");
+                                Console.WriteLine($"Input was: {input}");
+                            }
+                        }
+                        catch (ArgumentException e)
+                        {
+                            //Parsing failed
+                            Console.WriteLine(e.Message);
+                        }
                     }
                 }
 
