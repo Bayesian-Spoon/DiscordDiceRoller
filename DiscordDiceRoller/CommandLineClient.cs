@@ -16,7 +16,7 @@ namespace DiscordDiceRoller
 
             //Main loop
             string? input = Console.ReadLine();
-            while (input != "/exit")
+            while (input != "/exit" && input != "/quit")
             {
                 if (input != null)
                 {
@@ -29,7 +29,7 @@ namespace DiscordDiceRoller
                     {
                         try
                         {
-                            DiceRoller.RollResult? result;
+                            RollResult? result;
                             int firstSpace = input.IndexOf(' ');
                             if (firstSpace == -1)
                             {

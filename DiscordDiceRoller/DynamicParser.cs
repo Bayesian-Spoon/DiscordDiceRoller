@@ -1,24 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using static DiscordDiceRoller.DiceRoller;
+﻿using System.Reflection;
 
 namespace DiscordDiceRoller
 {
-    public class RollParser : Attribute
+    public class DiceParser : Attribute
     {
         public readonly string slashCommand;
 
-        public RollParser(string _slashCommand)
+        public DiceParser(string _slashCommand)
         {
             this.slashCommand = _slashCommand;
         }
     }
-
 
     internal class DynamicParser
     {
@@ -30,16 +22,16 @@ namespace DiscordDiceRoller
 
             var methods = assembly.GetTypes()
                       .SelectMany(t => t.GetMethods())
-                      .Where(m => m.GetCustomAttributes(typeof(RollParser), false).Length > 0)
+                      .Where(m => m.GetCustomAttributes(typeof(DiceParser), false).Length > 0)
                       .ToArray();
 
             foreach (var method in methods)
             {
-                object[] attributes = method.GetCustomAttributes(typeof(RollParser), false);
+                object[] attributes = method.GetCustomAttributes(typeof(DiceParser), false);
                 foreach (object attr in attributes)
                 {
-                    RollParser rollParser = (RollParser)attr;
-                    parsers.Add(rollParser.slashCommand, method);
+                    DiceParser DiceParser = (DiceParser)attr;
+                    parsers.Add(DiceParser.slashCommand, method);
                 }
             }
 
@@ -62,29 +54,4 @@ namespace DiscordDiceRoller
             }
         }
     }
-
-    public class RollParser_Example1
-    {
-        [RollParser("/roll")]
-        public static RollResult Parse(string slashCommand, string args)
-        {
-            RollResult rollResult = new RollResult(RollType.Regular);
-            rollResult.DetailedOutcome = $"Example /roll invoked with args {args}";
-
-            return rollResult;
-        }
-    }
-
-    public class RollParser_Example2
-    {
-        [RollParser("/blades")]
-        public static RollResult Parse(string slashCommand, string args)
-        {
-            RollResult rollResult = new RollResult(RollType.Regular);
-            rollResult.DetailedOutcome = $"Example /blades invoked with args {args}";
-
-            return rollResult;
-        }
-    }
-
 }
