@@ -44,8 +44,7 @@ namespace DiscordDiceRoller
 
             if (method == null)
             {
-                //TODO
-                throw new ArgumentException("Uknown slash command: " + slashCommand);
+                throw new ArgumentException("Unknown slash command: " + slashCommand);
             }
             else
             {
