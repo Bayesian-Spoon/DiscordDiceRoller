@@ -27,7 +27,7 @@ namespace DiscordDiceRoller
             return string.Join(", ", IndividualRolls);
         }
 
-        public string IndividualRollsSorted()
+        public virtual string IndividualRollsSorted()
         {
             return string.Join(", ", IndividualRolls.OrderBy(x => x));
         }

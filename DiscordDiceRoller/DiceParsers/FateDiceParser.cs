@@ -2,12 +2,28 @@
 
 namespace DiscordDiceRoller.DiceParsers
 {
-    internal class FateDiceParser
+    public class FateRollResult : RollResult
+    {
+        public FateRollResult(string _slashCommand, string _rawArguments) : base(_slashCommand, _rawArguments)
+        {}
+
+        public override string IndividualRollsSorted()
+        {            
+            List<string> replacedStrings = IndividualRolls
+                .OrderBy(x => x)
+                .Select(x => x == 0 ? "0" 
+                          : (x > 0 ? "+" : "-"))
+                .ToList();
+            return string.Join(" ", replacedStrings);
+        }
+    }
+
+    public class FateDiceParser
     {
         [DiceParser("/fate")]
-        public static RollResult Parse(string slashCommand, string args)
+        public static FateRollResult Parse(string slashCommand, string args)
         {
-            RollResult result = new RollResult(slashCommand, args);
+            FateRollResult result = new FateRollResult(slashCommand, args);
 
             //Parse args:
             // Only argument is an (optional) target difficulty
@@ -22,7 +38,7 @@ namespace DiscordDiceRoller.DiceParsers
             //Roll 4dF
             for (int die = 0; die < 4; die++)
             {
-                int dieResult = Roll(3) - 2; //-1, 0, or +1
+                int dieResult = RollFateDie();
                 result.IndividualRolls.Add(dieResult);
             }
 
@@ -69,6 +85,14 @@ namespace DiscordDiceRoller.DiceParsers
 
             //Done
             return result;
+        }
+
+        /// <summary>
+        /// Produces a result of -1, 0, or +1
+        /// </summary>
+        public static int RollFateDie()
+        {
+            return Roll(3) - 2; //-1, 0, or +1
         }
     }
 }

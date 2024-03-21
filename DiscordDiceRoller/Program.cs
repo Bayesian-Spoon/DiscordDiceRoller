@@ -6,7 +6,7 @@ namespace DiscordDiceRoller
     {
         static void Main(string[] args)
         {
-#if TRUE
+#if false
             //Easy debug override for console mode
             new CommandLineClient().Run();
             return;

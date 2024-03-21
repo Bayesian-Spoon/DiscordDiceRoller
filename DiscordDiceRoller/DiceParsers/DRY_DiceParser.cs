@@ -81,6 +81,9 @@ namespace DiscordDiceRoller.DiceParsers
             categories.Add(DRY_Outcome.Pain.ToString(), result.PainRolls);
             result.Dominance = (DRY_Outcome)Enum.Parse(typeof(DRY_Outcome), DetermineHighestResult(categories));
 
+            //Descriptive outcomes
+            //TODO
+
             //Done
             return result;
         }       

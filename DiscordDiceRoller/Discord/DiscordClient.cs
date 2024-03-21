@@ -126,7 +126,7 @@ namespace DiscordDiceRoller.Discord
 
 
             //Roll command
-            var guildCommand = new SlashCommandBuilder()
+            var rollCommand = new SlashCommandBuilder()
                 .WithName("roll")
                 .WithDescription("Roll some dice! Defaults to 1d20 if not otherwise specified")
                 .AddOption("dice", ApplicationCommandOptionType.Integer, "How many dice to roll", isRequired: false)
@@ -135,7 +135,24 @@ namespace DiscordDiceRoller.Discord
 
             try
             {
-                await guild.CreateApplicationCommandAsync(guildCommand.Build());
+                await guild.CreateApplicationCommandAsync(rollCommand.Build());
+            }
+            catch (ApplicationCommandException exception)
+            {
+                // If our command was invalid, we should catch an ApplicationCommandException. This exception contains the path of the error as well as the error message.
+                var json = JsonConvert.SerializeObject(exception.Errors, Formatting.Indented);
+                Console.WriteLine(json);
+            }
+
+            //Fate command
+            var fateCommand = new SlashCommandBuilder()
+                .WithName("fate")
+                .WithDescription("Roll 4dF. Will produce a result between -4 and +4, with a strong bias towards 0.")
+                ;
+
+            try
+            {
+                await guild.CreateApplicationCommandAsync(fateCommand.Build());
             }
             catch (ApplicationCommandException exception)
             {
