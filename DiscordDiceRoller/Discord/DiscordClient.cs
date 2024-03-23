@@ -8,6 +8,36 @@ using System;
 
 namespace DiscordDiceRoller.Discord
 {
+    public sealed class DiscordServerSingleton
+    {
+        private static readonly DiscordServerSingleton instance = new DiscordServerSingleton();        
+        public SocketGuild? Server;
+
+        // Explicit static constructor to tell C# compiler
+        // not to mark type as beforefieldinit
+        static DiscordServerSingleton()
+        {
+        }
+
+        private DiscordServerSingleton()
+        {
+        }
+
+        public static DiscordServerSingleton Instance
+        {
+            get
+            {
+                return instance;
+            }
+        }
+
+        internal void Initialize(SocketGuild server)
+        {
+            Server = server;            
+        }
+    }
+
+
     internal class DiscordClient
     {
         DiscordSocketClient client;
@@ -15,7 +45,7 @@ namespace DiscordDiceRoller.Discord
 
         public DiscordClient(Secrets _secrets)
         {
-            secrets = _secrets;
+            secrets = _secrets;            
         }
 
         public void Run()
@@ -24,7 +54,7 @@ namespace DiscordDiceRoller.Discord
         }
 
         internal async Task MainAsync()
-        {
+        {           
             using (var services = ConfigureServices())
             {                
                 var config = new DiscordSocketConfig()
@@ -32,7 +62,6 @@ namespace DiscordDiceRoller.Discord
                     GatewayIntents = GatewayIntents.All
                 };
                 client = new DiscordSocketClient(config);
-
                 client.SlashCommandExecuted += SlashCommands.SlashCommandHandler;
                 client.Log += LogAsync;
                 services.GetRequiredService<CommandService>().Log += LogAsync;
@@ -47,8 +76,7 @@ namespace DiscordDiceRoller.Discord
                 client.Ready += StartupCommands;
 
                 // Allow you to send commands and messages via the command line
-                client.Ready += AllowAdminCommands;
-
+                client.Ready += AllowAdminCommands;                
 
                 // Run until terminated
                 await Task.Delay(Timeout.Infinite);
@@ -56,17 +84,21 @@ namespace DiscordDiceRoller.Discord
         }
        
         private Task StartupCommands()
-        {
+        {           
             var server = client.GetGuild(secrets.ServerId);
             if (server != null)
             {
+                //This can't be run before startup
+                DiscordServerSingleton.Instance.Initialize(server);
+
+                //Ping Channel with "online" message
                 var channel = server.GetChannel(secrets.ChannelId) as IMessageChannel;
                 if (channel != null)
                 {
                     channel.SendMessageAsync(client.CurrentUser.Username + " is online");
                 }
             }
-            return Task.CompletedTask;
+            return Task.CompletedTask;            
         }      
 
         private Task AllowAdminCommands()
@@ -160,6 +192,14 @@ namespace DiscordDiceRoller.Discord
                 var json = JsonConvert.SerializeObject(exception.Errors, Formatting.Indented);
                 Console.WriteLine(json);
             }
+
+            //Test command
+            var testCommand = new SlashCommandBuilder()
+               .WithName("test")
+               .WithDescription("Outputs debugging data.")
+               ;
+
+            await guild.CreateApplicationCommandAsync(testCommand.Build());
         }
     }
 }

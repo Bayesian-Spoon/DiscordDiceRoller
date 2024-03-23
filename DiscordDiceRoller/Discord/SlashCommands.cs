@@ -20,6 +20,9 @@ namespace DiscordDiceRoller.Discord
                 case "fate":
                     await HandleFate(command);
                     break;
+                case "test":
+                    await HandleTest(command);
+                    break;
                 default:
                     await command.RespondAsync($"Unknown command: {command.Data.Name}");
                     break;
@@ -59,8 +62,7 @@ namespace DiscordDiceRoller.Discord
             int result = DiceRoller.Roll(dice, sides);
 
             //Respond
-            var name = command.User.GlobalName;
-            await command.RespondAsync($"{name} rolled {dice}d{sides} and got: {result}");
+            await command.RespondAsync($"{GetDisplayName(command)} rolled {dice}d{sides} and got: {result}");
         }
 
         static internal async Task HandleFate(SocketSlashCommand command)
@@ -69,8 +71,27 @@ namespace DiscordDiceRoller.Discord
             FateRollResult result = FateDiceParser.Parse("/roll", "");
 
             //Respond
-            var name = command.User.GlobalName;
-            await command.RespondAsync($"{name} rolled {result.DiceRolled} and got: {result.NumericOutcome} ({result.IndividualRollsSorted()})");
+            await command.RespondAsync($"{GetDisplayName(command)} rolled {result.DiceRolled}. {result.DetailedOutcome}");
+        }
+
+        static internal async Task HandleTest(SocketSlashCommand command)
+        {
+            //Respond
+            await command.RespondAsync($"GlobalName is {command.User.GlobalName}. Username is {command.User.Username}. DisplayName is {GetDisplayName(command)}.");
+        }
+        
+        static string GetDisplayName(SocketSlashCommand command)
+        {
+            if (DiscordServerSingleton.Instance.Server != null)
+            {
+                //Default to server nickname if we can
+                return DiscordServerSingleton.Instance.Server.GetUser(command.User.Id).DisplayName;
+            }
+            else
+            {
+                //Otherwise use the global username
+                return command.User.GlobalName;
+            }
         }
     }
 }
